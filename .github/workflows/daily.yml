@@ -1,8 +1,8 @@
 name: Daily News Bot
 on:
   schedule:
-    - cron: '23 22 * * *' # 한국 시간 기준 매일 오전 7시 23분 (UTC 기준 22:23)
-  workflow_dispatch: # 수동으로 실행해볼 수 있는 버튼 생성
+    - cron: '30 22 * * *' # 한국 시간 매일 오전 7시 30분
+  workflow_dispatch: # 수동 실행 버튼
 
 jobs:
   build:
@@ -12,10 +12,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11' # 🛠️ 더 안정적인 3.11 버전으로 올렸습니다.
       - name: Install dependencies
         run: |
-          pip install requests google.generativeai
+          python -m pip install --upgrade pip
+          # 🛠️ 옛날 도구는 지우고 새 도구(google-genai)만 딱 설치하도록 만들었습니다.
+          pip install requests google-genai 
       - name: Run bot
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
