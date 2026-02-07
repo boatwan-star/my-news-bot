@@ -11,10 +11,8 @@ GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
 TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
 CHAT_ID = os.environ['CHAT_ID']
 
-# 🛠️ [중요 수정] Gemini 로봇 설정 (404 오류 방지)
-genai.configure(api_key=GEMINI_API_KEY)
-# 'models/'를 붙여서 이름을 아주 정확하게 알려줍니다.
-model = genai.GenerativeModel('models/gemini-2.5-flash')
+# 2. [수정 포인트] genai.configure 대신 바로 Client를 생성합니다.
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 # --- [1. 네이버 뉴스 수집 함수] ---
 def get_naver_news(query):
@@ -71,9 +69,13 @@ def main():
     """
     
     try:
-        response = model.generate_content(prompt)
-        summary = response.text
-
+        response = client.models.generate_content(
+            model="gemini-2.5-flash", 
+            contents=prompt
+        )
+        
+        summary_text = response.text
+        
         # --- [5. 텔레그램 전송] ---
         send_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
         # 링크 클릭이 잘 되도록 설정
