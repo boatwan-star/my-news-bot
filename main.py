@@ -1,7 +1,8 @@
 import os
 import requests
 import datetime
-import google.generativeai as genai
+# 🛠️ 옛날 방식(import google.generativeai)을 지우고 이 방식으로 바꿔야 합니다!
+from google import genai
 
 # 금고(Secrets)에서 비밀번호 가져오기
 NAVER_CLIENT_ID = os.environ['NAVER_CLIENT_ID']
@@ -10,8 +11,8 @@ GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
 TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
 CHAT_ID = os.environ['CHAT_ID']
 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('models/gemini-2.5-flash')
+# 최신 방식으로 로봇 연결
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def get_naver_news(query):
     url = f"https://openapi.naver.com/v1/search/news.json?query={query}&display=50&sort=date"
@@ -30,7 +31,7 @@ def filter_yesterday_news(items):
     return filtered
 
 def main():
-    keywords = ["국내외 경제", "AI 빅테크 신기술", "2차전지 산업"]
+    keywords = ["국내외 경제", "AI 신기술", "2차전지 산업"]
     total_news_text = ""
     for kw in keywords:
         raw_news = get_naver_news(kw)
@@ -39,13 +40,19 @@ def main():
             total_news_text += f"### {kw} ###\n" + "\n".join(yesterday_news[:10]) + "\n\n"
 
     if not total_news_text:
+        print("어제 뉴스 데이터가 없습니다.")
         return
 
+    # 최신 방식으로 요약 요청
     prompt = f"아래 뉴스를 카테고리별로 3줄 요약하고 바로 밑에 링크를 붙여줘:\n{total_news_text}"
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-1.5-flash", 
+        contents=prompt
+    )
     
     send_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     requests.post(send_url, json={"chat_id": CHAT_ID, "text": f"📅 뉴스 브리핑\n\n{response.text}"})
+    print("성공적으로 보냈습니다!")
 
 if __name__ == "__main__":
     main()
