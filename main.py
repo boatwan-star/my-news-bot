@@ -81,7 +81,7 @@ def main():
         # 링크 클릭이 잘 되도록 설정
         payload = {
             "chat_id": CHAT_ID,
-            "text": f"📅 링크가 포함된 어제자 뉴스 브리핑\n\n{summary}",
+            "text": f"📅 링크가 포함된 어제자 뉴스 브리핑\n\n{summary_text}",
             "disable_web_page_preview": False  # 링크 미리보기를 보여줄지 선택 (True면 안보임)
         }
         requests.post(send_url, json=payload)
