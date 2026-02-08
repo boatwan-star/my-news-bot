@@ -80,7 +80,7 @@ def main():
 
     
     뉴스 리스트:
-    {total_news_text}
+    {total_context}
     """
     
     try:
