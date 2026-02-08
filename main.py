@@ -98,7 +98,7 @@ def main():
     try:
         # 🛠️ 안전한 2.0 모델 사용 (2.5가 안 될 경우를 대비)
         response = client.models.generate_content(
-            model="gemini-2.0-flash", 
+            model="gemini-2.5-flash", 
             contents=prompt
         )
         
