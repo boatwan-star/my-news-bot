@@ -52,6 +52,26 @@ def get_overseas_news(query):
         print(f"해외 뉴스 수집 중 에러: {e}")
         return []
 
+# 🛠️ 메시지가 길면 나눠서 보내는 함수
+def send_long_telegram_message(text):
+    base_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    # 텔레그램 제한인 4000자보다 넉넉하게 3500자씩 끊어서 전송
+    max_length = 3500
+    
+    for i in range(0, len(text), max_length):
+        part = text[i:i+max_length]
+        payload = {
+            "chat_id": CHAT_ID,
+            "text": part,
+            "disable_web_page_preview": False
+        }
+        res = requests.post(base_url, json=payload)
+        if res.status_code != 200:
+            print(f"❌ 전송 실패: {res.text}")
+        else:
+            print(f"✅ 메시지 파트 전송 성공!")
+
+
 def main():
     print("🌍 뉴스 수집 및 요약 시작...")
     
