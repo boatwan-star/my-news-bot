@@ -56,7 +56,7 @@ def get_overseas_news(query):
 def send_long_telegram_message(text):
     base_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     # 텔레그램 제한인 4000자보다 넉넉하게 3500자씩 끊어서 전송
-    max_length = 3500
+    max_length = 3000
     
     for i in range(0, len(text), max_length):
         part = text[i:i+max_length]
@@ -102,7 +102,7 @@ def main():
     아래 뉴스 리스트는 어제 발생한 국내외 경제, AI, 2차전지 뉴스입니다.
     
        [지시 사항]
-    1. 국내/해외를 구분해서 가장 중요한 소식 위주로 카테고리화 해
+    1. 국내/해외 뉴스 중 가장 중요한 소식 위주로 카테고리화 해
        #영문 뉴스는 반드시 한국어로 번역해서 요약해.
     2. 카테고리 별 핵심적인 뉴스 2~3개를 선정해줘.
     3. 핵심 내용을 1~2줄 이내로 요약해줘.
